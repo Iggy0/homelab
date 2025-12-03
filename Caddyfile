@@ -1,0 +1,32 @@
+# Nextcloud
+cloud.my.domain {
+    reverse_proxy myrpiaddress:8080
+    encode gzip
+    log {
+        output file /data/caddy/logs/nextcloud.log
+    }
+}
+
+# Pi-hole
+pihole.my.domain {
+    reverse_proxy myrpiaddress:8081
+    encode gzip
+    log {
+        output file /data/caddy/logs/pihole.log
+    }
+}
+
+# Cockpit
+cockpit.my.domain {
+    reverse_proxy myrpiaddress:9090 {
+        transport http {
+            tls_insecure_skip_verify
+        }
+        header_up X-Forwarded-Proto https
+        header_up X-Forwarded-Host {host}
+    }
+    encode gzip
+    log {
+	output file /data/caddy/logs/cockpit.log
+    }
+}
