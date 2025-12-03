@@ -1,0 +1,38 @@
+services:
+  db:
+    image: mariadb:10.6
+    container_name: nextcloud-db
+    restart: unless-stopped
+    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_PASSWORD: ncpass
+      MYSQL_DATABASE: nextcloud
+      MYSQL_USER: nextcloud
+    volumes:
+      - ./db:/var/lib/mysql
+
+  redis:
+    image: redis:alpine
+    container_name: nextcloud-redis
+    restart: unless-stopped
+
+  nextcloud:
+    image: nextcloud:latest
+    container_name: nextcloud-app
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    environment:
+      MYSQL_HOST: db
+      MYSQL_PASSWORD: ncpass
+      MYSQL_DATABASE: nextcloud
+      MYSQL_USER: nextcloud
+      REDIS_HOST: redis
+    volumes:
+      - ./html:/var/www/html
+      - ./data:/var/www/html/data
+      - /mnt/usbdrive:/mnt/usbdrive #This is main 3TB storage
+    depends_on:
+      - db
+      - redis
