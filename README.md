@@ -5,7 +5,7 @@ This repository documents my homelab journey and the services I run on Linux-bas
 
 ## What’s running
 - Nextcloud (Docker)
-- Pi-hole + Unbound
+- Pi-hole
 - Caddy reverse proxy
 - Raspberry Pi NAS
 - Basic monitoring
